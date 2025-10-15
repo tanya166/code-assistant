@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { reviewAPI } from '../services/api';
+import { reviewAPI } from '../../../client/src/services/api';
 import { FileCode, Clock, TrendingUp, Loader, AlertCircle } from 'lucide-react';
 
 const ReviewHistory = () => {
