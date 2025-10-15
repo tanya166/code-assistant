@@ -1,54 +1,103 @@
 const axios = require('axios');
 
 const analyzeCode = async (code, filename, language) => {
-    const prompt = `Review this ${language} code for readability, modularity, and potential bugs, then provide improvement suggestions.
+    const prompt = `You are a code review assistant. Analyze the following ${language} code and provide a detailed review.
 
 Filename: ${filename}
 
 Code:
+\`\`\`${language}
 ${code}
+\`\`\`
 
-Provide a detailed review in the following JSON format:
+Return ONLY a valid JSON object (no markdown, no explanations) with this exact structure:
 {
   "overallScore": <number 1-10>,
   "readability": {
     "score": <number 1-10>,
-    "issues": [<array of issues>],
-    "suggestions": [<array of suggestions>]
+    "issues": ["issue1", "issue2"],
+    "suggestions": ["suggestion1", "suggestion2"]
   },
   "modularity": {
     "score": <number 1-10>,
-    "issues": [<array of issues>],
-    "suggestions": [<array of suggestions>]
+    "issues": ["issue1", "issue2"],
+    "suggestions": ["suggestion1", "suggestion2"]
   },
   "potentialBugs": [
     {
-      "line": <line number>,
+      "line": <number>,
       "severity": "high|medium|low",
-      "description": "<description>",
-      "suggestion": "<how to fix>"
+      "description": "description",
+      "suggestion": "how to fix"
     }
   ],
-  "bestPractices": [<array of best practice violations>],
-  "summary": "<overall summary>"
+  "bestPractices": ["practice1", "practice2"],
+  "summary": "overall summary of the code quality"
 }`;
 
     try {
-        // Using Google Gemini (Free)
+        // Using Google Gemini 2.5 Flash (Latest and fastest)
         const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
             {
-                contents: [{ parts: [{ text: prompt }] }]
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 8192,
+                    responseMimeType: "application/json"
+                }
             }
         );
         
+        // Extract the text from response
+        if (!response.data.candidates || !response.data.candidates[0]) {
+            throw new Error('No response from API');
+        }
+        
         const text = response.data.candidates[0].content.parts[0].text;
-        // Extract JSON from response
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        return jsonMatch ? JSON.parse(jsonMatch[0]) : { error: 'Failed to parse response' };
+        console.log('Full API Response:', text);
+        
+        // Try to parse directly if it's already JSON
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            // If not, extract JSON from markdown code blocks
+            const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/) || text.match(/```\s*([\s\S]*?)\s*```/) || text.match(/\{[\s\S]*\}/);
+            
+            if (jsonMatch) {
+                const jsonStr = jsonMatch[1] || jsonMatch[0];
+                return JSON.parse(jsonStr);
+            } else {
+                console.error('No JSON found in response:', text);
+                throw new Error('Failed to parse response');
+            }
+        }
     } catch (error) {
-        console.error('LLM Error:', error);
-        throw new Error('Code analysis failed');
+        console.error('LLM Error:', error.response?.data || error.message);
+        
+        // Return a fallback response if API fails
+        return {
+            overallScore: 5,
+            readability: {
+                score: 5,
+                issues: ['Unable to analyze code at this time'],
+                suggestions: ['Please try again later']
+            },
+            modularity: {
+                score: 5,
+                issues: ['Unable to analyze code at this time'],
+                suggestions: ['Please try again later']
+            },
+            potentialBugs: [],
+            bestPractices: ['Analysis temporarily unavailable'],
+            summary: 'Code analysis failed. Please check your API key and try again.'
+        };
     }
 };
 
