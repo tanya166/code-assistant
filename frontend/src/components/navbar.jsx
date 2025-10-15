@@ -1,6 +1,7 @@
+// src/components/Navbar.jsx
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../client/src/context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { LogOut, Code, History, Home } from 'lucide-react';
 
 const Navbar = () => {

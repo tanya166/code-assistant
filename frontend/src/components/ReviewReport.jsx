@@ -1,6 +1,7 @@
+// src/components/ReviewReport.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { reviewAPI } from '../../../client/src/services/api';
+import { reviewAPI } from '../services/api';
 import {
   FileCode,
   TrendingUp,

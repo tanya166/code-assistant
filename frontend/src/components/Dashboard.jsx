@@ -1,6 +1,7 @@
+// src/components/Dashboard.jsx
 import { useState } from 'react';
 import { Upload, FileCode, Loader } from 'lucide-react';
-import { reviewAPI } from '../../../client/src/services/api';
+import { reviewAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {

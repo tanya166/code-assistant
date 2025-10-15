@@ -1,7 +1,8 @@
+// src/components/Login.jsx
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../../../client/src/context/AuthContext';
-import { authAPI } from '../../../client/src/services/api';
+import { AuthContext } from '../context/AuthContext';
+import { authAPI } from '../services/api';
 import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react';
 
 const Login = () => {
