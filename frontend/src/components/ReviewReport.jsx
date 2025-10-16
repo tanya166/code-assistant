@@ -1,4 +1,3 @@
-// src/components/ReviewReport.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { reviewAPI } from '../services/api';
@@ -13,6 +12,7 @@ import {
   XCircle,
   Loader,
   ArrowLeft,
+  AlertCircle,
 } from 'lucide-react';
 
 const ReviewReport = () => {
@@ -39,9 +39,9 @@ const ReviewReport = () => {
   };
 
   const getScoreColor = (score) => {
-    if (score >= 8) return 'text-green-600 bg-green-100 border-green-300';
-    if (score >= 6) return 'text-yellow-600 bg-yellow-100 border-yellow-300';
-    return 'text-red-600 bg-red-100 border-red-300';
+    if (score >= 8) return 'text-green-600 bg-green-50 border-green-200';
+    if (score >= 6) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    return 'text-red-600 bg-red-50 border-red-200';
   };
 
   const getSeverityIcon = (severity) => {
@@ -60,20 +60,20 @@ const ReviewReport = () => {
   const getSeverityColor = (severity) => {
     switch (severity) {
       case 'high':
-        return 'bg-red-50 border-red-300';
+        return 'bg-red-50 border-red-200';
       case 'medium':
-        return 'bg-yellow-50 border-yellow-300';
+        return 'bg-yellow-50 border-yellow-200';
       case 'low':
-        return 'bg-blue-50 border-blue-300';
+        return 'bg-blue-50 border-blue-200';
       default:
-        return 'bg-gray-50 border-gray-300';
+        return 'bg-slate-50 border-slate-200';
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader className="animate-spin text-purple-600" size={48} />
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <Loader className="animate-spin text-slate-900" size={48} />
       </div>
     );
   }
@@ -81,8 +81,16 @@ const ReviewReport = () => {
   if (error || !review) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
-          {error || 'Review not found'}
+        <button
+          onClick={() => navigate('/history')}
+          className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 mb-6 font-medium transition"
+        >
+          <ArrowLeft size={20} />
+          <span>Back to History</span>
+        </button>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center space-x-2">
+          <AlertCircle size={20} />
+          <span>{error || 'Review not found'}</span>
         </div>
       </div>
     );
@@ -94,60 +102,63 @@ const ReviewReport = () => {
     <div className="max-w-6xl mx-auto px-4 py-12">
       <button
         onClick={() => navigate('/history')}
-        className="flex items-center space-x-2 text-purple-600 hover:text-purple-700 mb-6 font-medium"
+        className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 mb-8 font-medium transition"
       >
         <ArrowLeft size={20} />
         <span>Back to History</span>
       </button>
 
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <FileCode className="text-purple-600" size={32} />
+      <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-slate-200">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <div className="bg-slate-100 p-3 rounded-lg">
+              <FileCode className="text-slate-900" size={28} />
+            </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{review.filename}</h1>
-              <p className="text-gray-600 mt-1">
-                Language: <span className="font-semibold uppercase">{review.language}</span>
+              <h1 className="text-3xl font-bold text-slate-900">{review.filename}</h1>
+              <p className="text-slate-600 mt-1">
+                <span className="font-semibold uppercase">{review.language}</span>
               </p>
             </div>
           </div>
           <div className={`text-center px-6 py-4 rounded-xl border-2 ${getScoreColor(analysis.overallScore)}`}>
-            <p className="text-sm font-medium mb-1">Overall Score</p>
+            <p className="text-sm font-medium text-slate-600 mb-1">Overall Score</p>
             <p className="text-4xl font-bold">{analysis.overallScore}/10</p>
           </div>
         </div>
 
-        {/* Summary */}
         {analysis.summary && (
-          <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-            <p className="text-gray-800 leading-relaxed">{analysis.summary}</p>
+          <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+            <p className="text-slate-800 leading-relaxed">{analysis.summary}</p>
           </div>
         )}
       </div>
 
       {/* Scores Grid */}
-      <div className="grid md:grid-cols-2 gap-6 mb-6">
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
         {/* Readability */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <BookOpen className="text-blue-600" size={28} />
-              <h2 className="text-2xl font-bold text-gray-900">Readability</h2>
+              <div className="bg-blue-100 p-2 rounded-lg">
+                <BookOpen className="text-blue-600" size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900">Readability</h2>
             </div>
-            <span className={`text-2xl font-bold px-4 py-2 rounded-lg ${getScoreColor(analysis.readability.score)}`}>
+            <span className={`text-2xl font-bold px-3 py-1 rounded-lg border ${getScoreColor(analysis.readability.score)}`}>
               {analysis.readability.score}/10
             </span>
           </div>
 
           {analysis.readability.issues && analysis.readability.issues.length > 0 && (
             <div className="mb-4">
-              <h3 className="font-semibold text-gray-900 mb-2">Issues:</h3>
+              <h3 className="font-semibold text-slate-900 mb-2 text-sm">Issues:</h3>
               <ul className="space-y-2">
                 {analysis.readability.issues.map((issue, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span className="text-gray-700">{issue}</span>
+                  <li key={idx} className="flex items-start space-x-2 text-slate-700 text-sm">
+                    <span className="text-red-500 mt-0.5">•</span>
+                    <span>{issue}</span>
                   </li>
                 ))}
               </ul>
@@ -156,12 +167,12 @@ const ReviewReport = () => {
 
           {analysis.readability.suggestions && analysis.readability.suggestions.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Suggestions:</h3>
+              <h3 className="font-semibold text-slate-900 mb-2 text-sm">Suggestions:</h3>
               <ul className="space-y-2">
                 {analysis.readability.suggestions.map((suggestion, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="text-green-500 mt-1">✓</span>
-                    <span className="text-gray-700">{suggestion}</span>
+                  <li key={idx} className="flex items-start space-x-2 text-slate-700 text-sm">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span>{suggestion}</span>
                   </li>
                 ))}
               </ul>
@@ -170,25 +181,27 @@ const ReviewReport = () => {
         </div>
 
         {/* Modularity */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <Package className="text-indigo-600" size={28} />
-              <h2 className="text-2xl font-bold text-gray-900">Modularity</h2>
+              <div className="bg-purple-100 p-2 rounded-lg">
+                <Package className="text-purple-600" size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900">Modularity</h2>
             </div>
-            <span className={`text-2xl font-bold px-4 py-2 rounded-lg ${getScoreColor(analysis.modularity.score)}`}>
+            <span className={`text-2xl font-bold px-3 py-1 rounded-lg border ${getScoreColor(analysis.modularity.score)}`}>
               {analysis.modularity.score}/10
             </span>
           </div>
 
           {analysis.modularity.issues && analysis.modularity.issues.length > 0 && (
             <div className="mb-4">
-              <h3 className="font-semibold text-gray-900 mb-2">Issues:</h3>
+              <h3 className="font-semibold text-slate-900 mb-2 text-sm">Issues:</h3>
               <ul className="space-y-2">
                 {analysis.modularity.issues.map((issue, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span className="text-gray-700">{issue}</span>
+                  <li key={idx} className="flex items-start space-x-2 text-slate-700 text-sm">
+                    <span className="text-red-500 mt-0.5">•</span>
+                    <span>{issue}</span>
                   </li>
                 ))}
               </ul>
@@ -197,12 +210,12 @@ const ReviewReport = () => {
 
           {analysis.modularity.suggestions && analysis.modularity.suggestions.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Suggestions:</h3>
+              <h3 className="font-semibold text-slate-900 mb-2 text-sm">Suggestions:</h3>
               <ul className="space-y-2">
                 {analysis.modularity.suggestions.map((suggestion, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="text-green-500 mt-1">✓</span>
-                    <span className="text-gray-700">{suggestion}</span>
+                  <li key={idx} className="flex items-start space-x-2 text-slate-700 text-sm">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span>{suggestion}</span>
                   </li>
                 ))}
               </ul>
@@ -213,34 +226,36 @@ const ReviewReport = () => {
 
       {/* Potential Bugs */}
       {analysis.potentialBugs && analysis.potentialBugs.length > 0 && (
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <Bug className="text-red-600" size={28} />
-            <h2 className="text-2xl font-bold text-gray-900">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="bg-red-100 p-2 rounded-lg">
+              <Bug className="text-red-600" size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-slate-900">
               Potential Bugs ({analysis.potentialBugs.length})
             </h2>
           </div>
 
           <div className="space-y-4">
             {analysis.potentialBugs.map((bug, idx) => (
-              <div key={idx} className={`border-2 rounded-lg p-4 ${getSeverityColor(bug.severity)}`}>
+              <div key={idx} className={`border rounded-lg p-4 ${getSeverityColor(bug.severity)}`}>
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center space-x-2">
                     {getSeverityIcon(bug.severity)}
-                    <span className="font-semibold text-gray-900 uppercase text-sm">
+                    <span className="font-semibold text-slate-900 uppercase text-xs">
                       {bug.severity} Severity
                     </span>
                   </div>
                   {bug.line && (
-                    <span className="text-sm bg-white px-3 py-1 rounded-full font-mono">
+                    <span className="text-xs bg-white px-2 py-1 rounded font-mono text-slate-600">
                       Line {bug.line}
                     </span>
                   )}
                 </div>
-                <p className="text-gray-800 mb-2 font-medium">{bug.description}</p>
+                <p className="text-slate-800 mb-2 font-medium text-sm">{bug.description}</p>
                 {bug.suggestion && (
-                  <div className="mt-2 pl-4 border-l-4 border-green-500">
-                    <p className="text-sm text-gray-700">
+                  <div className="mt-3 pl-4 border-l-4 border-green-500">
+                    <p className="text-sm text-slate-700">
                       <span className="font-semibold">Fix: </span>
                       {bug.suggestion}
                     </p>
@@ -254,17 +269,19 @@ const ReviewReport = () => {
 
       {/* Best Practices */}
       {analysis.bestPractices && analysis.bestPractices.length > 0 && (
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <CheckCircle className="text-green-600" size={28} />
-            <h2 className="text-2xl font-bold text-gray-900">Best Practices</h2>
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="bg-green-100 p-2 rounded-lg">
+              <CheckCircle className="text-green-600" size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-slate-900">Best Practices</h2>
           </div>
 
           <ul className="space-y-3">
             {analysis.bestPractices.map((practice, idx) => (
-              <li key={idx} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                <span className="text-purple-600 mt-1">→</span>
-                <span className="text-gray-800">{practice}</span>
+              <li key={idx} className="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <span className="text-slate-900 mt-0.5 font-semibold">→</span>
+                <span className="text-slate-800 text-sm">{practice}</span>
               </li>
             ))}
           </ul>
@@ -272,16 +289,16 @@ const ReviewReport = () => {
       )}
 
       {/* Actions */}
-      <div className="mt-8 flex justify-center space-x-4">
+      <div className="flex justify-center space-x-4">
         <button
           onClick={() => navigate('/dashboard')}
-          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition font-medium"
+          className="px-6 py-3 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition font-semibold"
         >
           Review Another File
         </button>
         <button
           onClick={() => navigate('/history')}
-          className="px-6 py-3 bg-white text-purple-600 border-2 border-purple-600 rounded-lg hover:bg-purple-50 transition font-medium"
+          className="px-6 py-3 bg-white text-slate-900 border-2 border-slate-200 rounded-lg hover:bg-slate-50 transition font-semibold"
         >
           View All Reviews
         </button>
