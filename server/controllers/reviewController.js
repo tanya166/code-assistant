@@ -2,7 +2,6 @@ const pool = require('../config/db');
 const { analyzeCode } = require('../llm/llmservice');
 const fs = require('fs').promises;
 
-// Language extension mapping
 const getLanguageFromFile = (filename) => {
   const ext = filename.split('.').pop().toLowerCase();
   const languageMap = {
@@ -20,7 +19,6 @@ const getLanguageFromFile = (filename) => {
   return languageMap[ext] || 'unknown';
 };
 
-// Upload and analyze code
 const uploadCode = async (req, res) => {
   try {
     if (!req.file) {
@@ -31,13 +29,10 @@ const uploadCode = async (req, res) => {
     const userId = req.userId;
     const language = getLanguageFromFile(originalname);
 
-    // Read file content
     const code = await fs.readFile(path, 'utf8');
 
-    // Clean up uploaded file
     await fs.unlink(path);
 
-    // Analyze code with LLM
     let analysisResult;
     try {
       analysisResult = await analyzeCode(code, originalname, language);
@@ -46,7 +41,6 @@ const uploadCode = async (req, res) => {
       return res.status(500).json({ error: 'Code analysis failed' });
     }
 
-    // Store review in database
     const result = await pool.query(
       `INSERT INTO reviews 
        (user_id, filename, language, code_content, overall_score, readability_score, modularity_score, bugs_count, analysis_result) 
@@ -75,7 +69,6 @@ const uploadCode = async (req, res) => {
   }
 };
 
-// Get all reviews for a user
 const getReviewHistory = async (req, res) => {
   try {
     const userId = req.userId;
@@ -97,7 +90,6 @@ const getReviewHistory = async (req, res) => {
   }
 };
 
-// Get single review by ID
 const getReviewById = async (req, res) => {
   try {
     const { id } = req.params;

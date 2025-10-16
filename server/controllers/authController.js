@@ -2,12 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 
-// Register a new user
 const register = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    // Check if user already exists
     const userExists = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
@@ -17,17 +15,14 @@ const register = async (req, res) => {
       return res.status(400).json({ error: 'User already exists' });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
     const newUser = await pool.query(
       'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, created_at',
       [name, email, hashedPassword]
     );
 
-    // Generate token
     const token = jwt.sign(
       { userId: newUser.rows[0].id, email: newUser.rows[0].email },
       process.env.JWT_SECRET,
@@ -49,12 +44,10 @@ const register = async (req, res) => {
   }
 };
 
-// Login user
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if user exists
     const user = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
@@ -64,14 +57,12 @@ const login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Check password
     const validPassword = await bcrypt.compare(password, user.rows[0].password);
 
     if (!validPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Generate token
     const token = jwt.sign(
       { userId: user.rows[0].id, email: user.rows[0].email },
       process.env.JWT_SECRET,

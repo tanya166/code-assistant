@@ -8,7 +8,6 @@ const {
   getReviewById,
 } = require('../controllers/reviewController');
 
-// Configure multer for file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -32,19 +31,15 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-// All routes require authentication
 router.use(authMiddleware);
 
-// Upload and analyze code
 router.post('/upload', upload.single('codeFile'), uploadCode);
 
-// Get review history
 router.get('/history', getReviewHistory);
 
-// Get single review
 router.get('/:id', getReviewById);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-// server/setupDatabase.js
+
 require('dotenv').config();
 const { Pool } = require('pg');
 const fs = require('fs');
@@ -11,20 +11,17 @@ const pool = new Pool({
 async function setupDatabase() {
     try {
         console.log('🔄 Setting up database...');
-        
-        // Read the schema file
+
         const schemaPath = path.join(__dirname, 'database_schema.sql');
         const schema = fs.readFileSync(schemaPath, 'utf8');
         
-        // Execute the schema
         await pool.query(schema);
         
         console.log('✅ Database setup completed successfully!');
         console.log('📊 Tables created:');
         console.log('   - users');
         console.log('   - reviews');
-        
-        // Verify tables were created
+    
         const result = await pool.query(`
             SELECT table_name 
             FROM information_schema.tables 

@@ -36,7 +36,6 @@ Return ONLY a valid JSON object (no markdown, no explanations) with this exact s
 }`;
 
     try {
-        // Using Google Gemini 2.5 Flash (Latest and fastest)
         const response = await axios.post(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
             {
@@ -55,7 +54,6 @@ Return ONLY a valid JSON object (no markdown, no explanations) with this exact s
             }
         );
         
-        // Extract the text from response
         if (!response.data.candidates || !response.data.candidates[0]) {
             throw new Error('No response from API');
         }
@@ -63,11 +61,9 @@ Return ONLY a valid JSON object (no markdown, no explanations) with this exact s
         const text = response.data.candidates[0].content.parts[0].text;
         console.log('Full API Response:', text);
         
-        // Try to parse directly if it's already JSON
         try {
             return JSON.parse(text);
         } catch (e) {
-            // If not, extract JSON from markdown code blocks
             const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/) || text.match(/```\s*([\s\S]*?)\s*```/) || text.match(/\{[\s\S]*\}/);
             
             if (jsonMatch) {
@@ -81,7 +77,6 @@ Return ONLY a valid JSON object (no markdown, no explanations) with this exact s
     } catch (error) {
         console.error('LLM Error:', error.response?.data || error.message);
         
-        // Return a fallback response if API fails
         return {
             overallScore: 5,
             readability: {
