@@ -6,6 +6,7 @@ const {
   uploadCode,
   getReviewHistory,
   getReviewById,
+  uploadCodeGuest,
 } = require('../controllers/reviewController');
 
 const storage = multer.diskStorage({
@@ -34,6 +35,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
+router.post('/guest-upload', upload.single('codeFile'), uploadCodeGuest);
 router.use(authMiddleware);
 
 router.post('/upload', upload.single('codeFile'), uploadCode);

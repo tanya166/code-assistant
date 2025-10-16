@@ -10,6 +10,7 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import ReviewReport from './components/ReviewReport';
 import ReviewHistory from './components/ReviewHistory';
+import GuestReview from './components/GuestReview';
 
 const PrivateRoute = ({ children }) => {
   const { token } = useContext(AuthContext);
@@ -42,6 +43,14 @@ function App() {
             <PublicRoute>
               <Register />
             </PublicRoute>
+          } />
+
+          {/* Guest Review Route - No Auth Required */}
+          <Route path="/guest-review" element={
+            <div className="min-h-screen bg-slate-50">
+              <Navbar />
+              <GuestReview />
+            </div>
           } />
 
           {/* Private Routes - With Navbar */}

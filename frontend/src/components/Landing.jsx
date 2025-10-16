@@ -53,12 +53,20 @@ export default function Landing() {
               <Code className="w-8 h-8 text-slate-900" />
               <span className="text-xl font-bold text-slate-900">CodeReview</span>
             </div>
-            <button
-              onClick={() => navigate('/get-started')}
-              className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-semibold"
-            >
-              Get Started
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => navigate('/guest-review')}
+                className="px-6 py-2 bg-slate-100 text-slate-900 rounded-lg hover:bg-slate-200 transition-colors font-semibold"
+              >
+                Try Free
+              </button>
+              <button
+                onClick={() => navigate('/get-started')}
+                className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-semibold"
+              >
+                Sign In
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -83,17 +91,18 @@ export default function Landing() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
+              onClick={() => navigate('/guest-review')}
+              className="px-8 py-4 bg-slate-100 text-slate-900 rounded-lg hover:bg-slate-200 transition-all font-semibold text-lg flex items-center justify-center space-x-2 border-2 border-slate-200"
+            >
+              <span>Try for free</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button
               onClick={() => navigate('/get-started')}
               className="px-8 py-4 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-all font-semibold text-lg flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
             >
-              <span>Start Reviewing</span>
+              <span>Sign Up</span>
               <ArrowRight className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={handleLearnMore}
-              className="px-8 py-4 bg-slate-100 text-slate-900 rounded-lg hover:bg-slate-200 transition-all font-semibold text-lg border-2 border-slate-200"
-            >
-              Learn More
             </button>
           </div>
         </div>
@@ -227,13 +236,22 @@ export default function Landing() {
           <p className="text-xl text-slate-300 mb-8">
             Join thousands of developers who trust CodeReview for their code analysis
           </p>
-          <button
-            onClick={() => navigate('/get-started')}
-            className="px-8 py-4 bg-white text-slate-900 rounded-lg hover:bg-slate-100 transition-all font-semibold text-lg inline-flex items-center space-x-2 shadow-lg hover:shadow-xl"
-          >
-            <span>Get Started Free</span>
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => navigate('/guest-review')}
+              className="px-8 py-4 bg-slate-200 text-slate-900 rounded-lg hover:bg-slate-100 transition-all font-semibold text-lg inline-flex items-center justify-center space-x-2"
+            >
+              <span>Try for Free</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => navigate('/get-started')}
+              className="px-8 py-4 bg-white text-slate-900 rounded-lg hover:bg-slate-100 transition-all font-semibold text-lg inline-flex items-center space-x-2 shadow-lg hover:shadow-xl"
+            >
+              <span>Get Started</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </section>
 

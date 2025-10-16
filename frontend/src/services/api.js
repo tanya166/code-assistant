@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -27,6 +26,11 @@ export const authAPI = {
 
 export const reviewAPI = {
   upload: (formData) => api.post('/review/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }),
+  uploadGuest: (formData) => api.post('/review/guest-upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

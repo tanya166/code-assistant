@@ -69,6 +69,42 @@ const uploadCode = async (req, res) => {
   }
 };
 
+const uploadCodeGuest = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const { originalname, path, size } = req.file;
+    const language = getLanguageFromFile(originalname);
+
+    const code = await fs.readFile(path, 'utf8');
+
+    await fs.unlink(path);
+
+    let analysisResult;
+    try {
+      analysisResult = await analyzeCode(code, originalname, language);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      return res.status(500).json({ error: 'Code analysis failed' });
+    }
+
+    // For guest users, we return the analysis without saving to database
+    res.status(200).json({
+      message: 'Code analyzed successfully',
+      review: {
+        filename: originalname,
+        language: language,
+        analysis_result: analysisResult,
+      },
+    });
+  } catch (error) {
+    console.error('Guest upload error:', error);
+    res.status(500).json({ error: 'Failed to process code upload' });
+  }
+};
+
 const getReviewHistory = async (req, res) => {
   try {
     const userId = req.userId;
@@ -115,6 +151,7 @@ const getReviewById = async (req, res) => {
 
 module.exports = {
   uploadCode,
+  uploadCodeGuest,
   getReviewHistory,
   getReviewById,
 };
