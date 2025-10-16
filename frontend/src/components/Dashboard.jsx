@@ -1,4 +1,4 @@
-// src/components/Dashboard.jsx
+
 import { useState } from 'react';
 import { Upload, FileCode, Loader } from 'lucide-react';
 import { reviewAPI } from '../services/api';
@@ -83,20 +83,20 @@ const Dashboard = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl font-bold text-slate-900 mb-4">
           Upload Your Code for Review
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-slate-600">
           Get instant AI-powered feedback on readability, modularity, and potential bugs
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
         <div
           className={`relative border-3 border-dashed rounded-xl p-12 text-center transition-all ${
             dragActive
-              ? 'border-purple-600 bg-purple-50'
-              : 'border-gray-300 hover:border-purple-400'
+              ? 'border-slate-900 bg-slate-50'
+              : 'border-slate-300 hover:border-slate-400'
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -113,10 +113,10 @@ const Dashboard = () => {
 
           {file ? (
             <div className="space-y-4">
-              <FileCode size={64} className="mx-auto text-purple-600" />
+              <FileCode size={64} className="mx-auto text-slate-900" />
               <div>
-                <p className="text-lg font-semibold text-gray-900">{file.name}</p>
-                <p className="text-sm text-gray-500">
+                <p className="text-lg font-semibold text-slate-900">{file.name}</p>
+                <p className="text-sm text-slate-500">
                   {(file.size / 1024).toFixed(2)} KB
                 </p>
               </div>
@@ -130,17 +130,17 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              <Upload size={64} className="mx-auto text-gray-400" />
+              <Upload size={64} className="mx-auto text-slate-400" />
               <div>
                 <label
                   htmlFor="file-upload"
-                  className="cursor-pointer text-purple-600 hover:text-purple-700 font-semibold"
+                  className="cursor-pointer text-slate-900 hover:text-slate-700 font-semibold"
                 >
                   Click to upload
                 </label>
-                <span className="text-gray-600"> or drag and drop</span>
+                <span className="text-slate-600"> or drag and drop</span>
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-slate-500">
                 Supported: .js, .jsx, .ts, .tsx, .py, .java, .cpp, .c, .go, .rs (max 5MB)
               </p>
             </div>
@@ -148,7 +148,7 @@ const Dashboard = () => {
         </div>
 
         {error && (
-          <div className="mt-4 bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+          <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
             {error}
           </div>
         )}
@@ -156,7 +156,7 @@ const Dashboard = () => {
         <button
           type="submit"
           disabled={!file || loading}
-          className="mt-6 w-full flex justify-center items-center space-x-2 py-4 px-6 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="mt-6 w-full flex justify-center items-center space-x-2 py-4 px-6 border border-transparent rounded-xl shadow-lg text-lg font-semibold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           {loading ? (
             <>
@@ -175,7 +175,7 @@ const Dashboard = () => {
           <button
             type="button"
             onClick={() => navigate('/history')}
-            className="text-purple-600 hover:text-purple-700 font-medium"
+            className="text-slate-900 hover:text-slate-700 font-medium"
           >
             View Review History →
           </button>
